@@ -1,6 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>omeglechat.online</title>
+  <style>
+    html, body { margin: 0; min-height: 100%; background: #111; color: #eee; font: 16px/1.5 system-ui, sans-serif; }
+    main { max-width: 32rem; margin: 20vh auto; padding: 0 1.25rem; text-align: center; }
+    h1 { font-size: 1.35rem; font-weight: 650; }
+    p { color: #bbb; }
+  </style>
+</head>
+<body>
+  <main id="blocked" hidden>
+    <h1>This site is not available in your region</h1>
+    <p>Access from Vietnam is not permitted.</p>
+  </main>
+  <script>
+    async function countryCode() {
+      try {
+        const text = await fetch("/cdn-cgi/trace", { cache: "no-store" }).then((r) => r.text());
+        const match = text.match(/^loc=([A-Z]{2})$/m);
+        if (match) return match[1];
+      } catch (_err) {}
+      try {
+        const data = await fetch("https://ipwho.is/?fields=country_code,success", { cache: "no-store" }).then((r) => r.json());
+        if (data && data.success && data.country_code) return data.country_code;
+      } catch (_err) {}
+      return "";
+    }
 
-    
-    <script>
-        // Dùng JavaScript để ép chuyển hướng trực tiếp
-        window.location.replace("https://omeglechat.love/");
-    </script>
+    (async () => {
+      const code = await countryCode();
+      if (code === "VN") {
+        document.getElementById("blocked").hidden = false;
+        return;
+      }
+      window.location.replace("https://omeglechat.love/");
+    })();
+  </script>
+</body>
+</html>
